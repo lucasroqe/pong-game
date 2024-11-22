@@ -1,0 +1,13 @@
+{
+  "name": "pong-game",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && http-server"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4",
+    "http-server": "^14.1.1"
+  }
+}
