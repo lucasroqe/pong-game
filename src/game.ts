@@ -4,12 +4,12 @@ import { Bola } from './bola.js'
 class PongGame {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
-    private leftPaddle: Raquete;
-    private rightPaddle: Raquete;
+    private raqueteEsquerda: Raquete;
+    private raqueteDireita: Raquete;
     private bola: Bola;
-    private isRunning: boolean = false;
-    private leftScore: number = 0;
-    private rightScore: number = 0;
+    private rodando: boolean = false;
+    private pontuacaoEsquerda: number = 0;
+    private pontuacaoDireita: number = 0;
 
     constructor() {
         this.canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
@@ -18,8 +18,8 @@ class PongGame {
         this.canvas.width = 800;
         this.canvas.height = 400;
 
-        this.leftPaddle = new Raquete(10, this.canvas.height / 2 - 40, 10, 80, this.canvas);
-        this.rightPaddle = new Raquete(this.canvas.width - 20, this.canvas.height / 2 - 40, 10, 80, this.canvas);
+        this.raqueteEsquerda = new Raquete(10, this.canvas.height / 2 - 40, 10, 80, this.canvas);
+        this.raqueteDireita = new Raquete(this.canvas.width - 20, this.canvas.height / 2 - 40, 10, 80, this.canvas);
         this.bola = new Bola(this.canvas.width / 2, this.canvas.height / 2, 5, this.canvas);
 
         this.addEventListeners();
@@ -29,15 +29,15 @@ class PongGame {
         document.getElementById('startButton')!.addEventListener('click', () => this.toggleGame());
     }
 
+    //Função para iniciar e parar o jogo
     private toggleGame() {
-        this.isRunning = !this.isRunning;
-        if (this.isRunning) {
+        this.rodando = !this.rodando;
+        if (this.rodando) {
             this.gameLoop();
         }
     }
-
     private gameLoop() {
-        if (!this.isRunning) return;
+        if (!this.rodando) return;
 
         this.update();
         this.render();
@@ -46,18 +46,18 @@ class PongGame {
 
     private update() {
         this.bola.update();
-        this.leftPaddle.update();
-        this.rightPaddle.update();
+        this.raqueteEsquerda.update();
+        this.raqueteDireita.update();
 
-        if (this.bola.colisaoRaquete(this.leftPaddle) || this.bola.colisaoRaquete(this.rightPaddle)) {
+        if (this.bola.colisaoRaquete(this.raqueteEsquerda) || this.bola.colisaoRaquete(this.raqueteDireita)) {
             this.bola.reverseX();
         }
 
         if (this.bola.x < 0) {
-            this.rightScore++;
+            this.pontuacaoDireita++;
             this.bola.reset();
         } else if (this.bola.x > this.canvas.width) {
-            this.leftScore++;
+            this.pontuacaoEsquerda++;
             this.bola.reset();
         }
     }
@@ -66,28 +66,19 @@ class PongGame {
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.leftPaddle.render(this.ctx);
-        this.rightPaddle.render(this.ctx);
+        this.raqueteEsquerda.render(this.ctx);
+        this.raqueteDireita.render(this.ctx);
         this.bola.render(this.ctx);
 
-        this.renderScore();
-        this.renderCenterLine();
+        this.renderPontuacao();
+
     }
 
-    private renderScore() {
+    private renderPontuacao() {
         this.ctx.fillStyle = 'white';
         this.ctx.font = '30px Arial';
-        this.ctx.fillText(this.leftScore.toString(), this.canvas.width / 4, 50);
-        this.ctx.fillText(this.rightScore.toString(), (3 * this.canvas.width) / 4, 50);
-    }
-
-    private renderCenterLine() {
-        this.ctx.strokeStyle = 'white';
-        this.ctx.setLineDash([5, 15]);
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.canvas.width / 2, 0);
-        this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
-        this.ctx.stroke();
+        this.ctx.fillText(this.pontuacaoEsquerda.toString(), this.canvas.width / 4, 50);
+        this.ctx.fillText(this.pontuacaoDireita.toString(), (3 * this.canvas.width) / 4, 50);
     }
 }
 

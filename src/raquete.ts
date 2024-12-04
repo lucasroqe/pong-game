@@ -1,6 +1,6 @@
 export class Raquete {
-    private speed: number = 0;
-    private readonly moveSpeed: number = 5;
+    private velocidade: number = 0;
+    private readonly moveVelocidade: number = 5;
 
     constructor(
         public x: number,
@@ -11,15 +11,15 @@ export class Raquete {
     ) {}
 
     move(direction: number) {
-        this.speed = direction * this.moveSpeed;
+        this.velocidade = direction * this.moveVelocidade;
     }
 
     stop() {
-        this.speed = 0;
+        this.velocidade = 0;
     }
 
     update() {
-        this.y += this.speed;
+        this.y += this.velocidade;
         this.y = Math.max(0, Math.min(this.y, this.canvas.height - this.height));
     }
 

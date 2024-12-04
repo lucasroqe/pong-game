@@ -14,8 +14,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 interface GameState {
   raquete1Y: number;
   raquete2Y: number;
-  ballX: number;
-  ballY: number;
+  bolaX: number;
+  bolaY: number;
   score1: number;
   score2: number;
 }
@@ -23,14 +23,14 @@ interface GameState {
 let gameState: GameState = {
   raquete1Y: 250,
   raquete2Y: 250,
-  ballX: 400,
-  ballY: 300,
+  bolaX: 400,
+  bolaY: 300,
   score1: 0,
   score2: 0
 };
 
-let ballSpeedX = 5;
-let ballSpeedY = 5;
+let bolaVelocidadeX = 5;
+let bolaVelocidadeY = 5;
 
 
 //Conexão para multiplayer
@@ -56,38 +56,38 @@ io.on('connection', (socket) => {
 
 setInterval(() => {
   //Atualizar posição da bola
-  gameState.ballX += ballSpeedX;
-  gameState.ballY += ballSpeedY;
+  gameState.bolaX += bolaVelocidadeX;
+  gameState.bolaY += bolaVelocidadeY;
 
   //Verificar colisão com as paredes
-  if (gameState.ballY <= 0 || gameState.ballY >= 600) {
-    ballSpeedY = -ballSpeedY;
+  if (gameState.bolaY <= 0 || gameState.bolaY >= 600) {
+    bolaVelocidadeY = -bolaVelocidadeY;
   }
 
   //Verificar colisão com as raquetes
-  if (gameState.ballX <= 50 && 
-      gameState.ballY >= gameState.raquete1Y && 
-      gameState.ballY <= gameState.raquete1Y + 100) {
-    ballSpeedX = -ballSpeedX;
+  if (gameState.bolaX <= 50 && 
+      gameState.bolaY >= gameState.raquete1Y && 
+      gameState.bolaY <= gameState.raquete1Y + 100) {
+    bolaVelocidadeX = -bolaVelocidadeX;
   }
 
   //Verificar colisão com a raquete do jogador 2
-  if (gameState.ballX >= 750 && 
-      gameState.ballY >= gameState.raquete2Y && 
-      gameState.ballY <= gameState.raquete2Y + 100) {
-    ballSpeedX = -ballSpeedX;
+  if (gameState.bolaX >= 750 && 
+      gameState.bolaY >= gameState.raquete2Y && 
+      gameState.bolaY <= gameState.raquete2Y + 100) {
+    bolaVelocidadeX = -bolaVelocidadeX;
   }
 
   //Verificar se a bola saiu da tela
-  if (gameState.ballX <= 0) {
+  if (gameState.bolaX <= 0) {
     gameState.score2++;
-    gameState.ballX = 400;
-    gameState.ballY = 300;
+    gameState.bolaX = 400;
+    gameState.bolaY = 300;
   }
-  if (gameState.ballX >= 800) {
+  if (gameState.bolaX >= 800) {
     gameState.score1++;
-    gameState.ballX = 400;
-    gameState.ballY = 300;
+    gameState.bolaX = 400;
+    gameState.bolaY = 300;
   }
 
   io.emit('game-state', gameState);
