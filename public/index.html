@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multiplayer Pong</title>
+    <style>
+        canvas {
+            border: 2px solid white;
+            background: black;
+            display: block;
+            margin: 0 auto;
+        }
+        body {
+            background: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/dist/client.js"></script>
+</body>
+</html> 

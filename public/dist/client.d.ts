@@ -1,0 +1,13 @@
+declare const io: any;
+declare const socket: any;
+declare const canvas: HTMLCanvasElement;
+declare const ctx: CanvasRenderingContext2D;
+declare let playerNumber: number;
+declare let paddle1Y: number;
+declare let paddle2Y: number;
+declare let ballX: number;
+declare let ballY: number;
+declare let score1: number;
+declare let score2: number;
+declare function handleMouseMove(e: MouseEvent): void;
+declare function draw(): void;

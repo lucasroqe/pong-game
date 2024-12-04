@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "es6",
+    "outDir": "./public/dist",
+    "rootDir": "./src",
+    "noEmit": false,
+    "composite": true,
+    "declaration": true
+  },
+  "include": ["src/client.ts"]
+} 
