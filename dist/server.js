@@ -11,7 +11,6 @@ const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
 const io = new socket_io_1.Server(httpServer);
 const PORT = 3000;
-// Serve static files
 app.use(express_1.default.static(path_1.default.join(__dirname, '../public')));
 let gameState = {
     paddle1Y: 250,
@@ -24,11 +23,9 @@ let gameState = {
 let ballSpeedX = 5;
 let ballSpeedY = 5;
 io.on('connection', (socket) => {
-    console.log('Player connected:', socket.id);
-    // Assign player number (1 or 2)
+    console.log('Jogador conectado:', socket.id);
     const playerNumber = io.engine.clientsCount <= 1 ? 1 : 2;
     socket.emit('player-number', playerNumber);
-    // Handle paddle movement
     socket.on('paddle-move', (paddleY) => {
         if (playerNumber === 1) {
             gameState.paddle1Y = paddleY;
@@ -42,16 +39,12 @@ io.on('connection', (socket) => {
         console.log('Player disconnected:', socket.id);
     });
 });
-// Game loop
 setInterval(() => {
-    // Update ball position
     gameState.ballX += ballSpeedX;
     gameState.ballY += ballSpeedY;
-    // Ball collision with top and bottom
     if (gameState.ballY <= 0 || gameState.ballY >= 600) {
         ballSpeedY = -ballSpeedY;
     }
-    // Ball collision with paddles
     if (gameState.ballX <= 50 &&
         gameState.ballY >= gameState.paddle1Y &&
         gameState.ballY <= gameState.paddle1Y + 100) {
@@ -62,7 +55,6 @@ setInterval(() => {
         gameState.ballY <= gameState.paddle2Y + 100) {
         ballSpeedX = -ballSpeedX;
     }
-    // Score points
     if (gameState.ballX <= 0) {
         gameState.score2++;
         gameState.ballX = 400;
@@ -76,5 +68,5 @@ setInterval(() => {
     io.emit('game-state', gameState);
 }, 1000 / 60);
 httpServer.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Rodando na porta ${PORT}`);
 });

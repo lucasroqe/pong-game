@@ -33,20 +33,16 @@ function handleMouseMove(e) {
 }
 canvas.addEventListener('mousemove', handleMouseMove);
 function draw() {
-    // Clear canvas
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    // Draw paddles
     ctx.fillStyle = 'white';
-    ctx.fillRect(20, paddle1Y, 20, 100); // Left paddle
-    ctx.fillRect(760, paddle2Y, 20, 100); // Right paddle
-    // Draw ball
+    ctx.fillRect(20, paddle1Y, 20, 100);
+    ctx.fillRect(760, paddle2Y, 20, 100);
     ctx.beginPath();
     ctx.arc(ballX, ballY, 10, 0, Math.PI * 2);
     ctx.fillStyle = 'white';
     ctx.fill();
     ctx.closePath();
-    // Draw scores
     ctx.font = '30px Arial';
     ctx.fillText(score1.toString(), 100, 50);
     ctx.fillText(score2.toString(), 700, 50);
