@@ -1,12 +1,12 @@
-import { Paddle } from './paddle.js';
-import { Ball } from './ball.js';
+import { Raquete } from './raquete.js'
+import { Bola } from './bola.js'
 
 class PongGame {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
-    private leftPaddle: Paddle;
-    private rightPaddle: Paddle;
-    private ball: Ball;
+    private leftPaddle: Raquete;
+    private rightPaddle: Raquete;
+    private bola: Bola;
     private isRunning: boolean = false;
     private leftScore: number = 0;
     private rightScore: number = 0;
@@ -18,37 +18,15 @@ class PongGame {
         this.canvas.width = 800;
         this.canvas.height = 400;
 
-        this.leftPaddle = new Paddle(10, this.canvas.height / 2 - 40, 10, 80, this.canvas);
-        this.rightPaddle = new Paddle(this.canvas.width - 20, this.canvas.height / 2 - 40, 10, 80, this.canvas);
-        this.ball = new Ball(this.canvas.width / 2, this.canvas.height / 2, 5, this.canvas);
+        this.leftPaddle = new Raquete(10, this.canvas.height / 2 - 40, 10, 80, this.canvas);
+        this.rightPaddle = new Raquete(this.canvas.width - 20, this.canvas.height / 2 - 40, 10, 80, this.canvas);
+        this.bola = new Bola(this.canvas.width / 2, this.canvas.height / 2, 5, this.canvas);
 
         this.addEventListeners();
     }
 
     private addEventListeners() {
         document.getElementById('startButton')!.addEventListener('click', () => this.toggleGame());
-        window.addEventListener('keydown', (e) => this.handleKeyPress(e));
-        window.addEventListener('keyup', (e) => this.handleKeyRelease(e));
-    }
-
-    private handleKeyPress(e: KeyboardEvent) {
-        e.preventDefault();
-        switch (e.key) {
-            case 'w': this.leftPaddle.move(-1); break;
-            case 's': this.leftPaddle.move(1); break;
-            case 'ArrowUp': this.rightPaddle.move(-1); break;
-            case 'ArrowDown': this.rightPaddle.move(1); break;
-        }
-    }
-
-    private handleKeyRelease(e: KeyboardEvent) {
-        e.preventDefault();
-        switch (e.key) {
-            case 'w':
-            case 's': this.leftPaddle.stop(); break;
-            case 'ArrowUp':
-            case 'ArrowDown': this.rightPaddle.stop(); break;
-        }
     }
 
     private toggleGame() {
@@ -67,20 +45,20 @@ class PongGame {
     }
 
     private update() {
-        this.ball.update();
+        this.bola.update();
         this.leftPaddle.update();
         this.rightPaddle.update();
 
-        if (this.ball.checkPaddleCollision(this.leftPaddle) || this.ball.checkPaddleCollision(this.rightPaddle)) {
-            this.ball.reverseX();
+        if (this.bola.colisaoRaquete(this.leftPaddle) || this.bola.colisaoRaquete(this.rightPaddle)) {
+            this.bola.reverseX();
         }
 
-        if (this.ball.x < 0) {
+        if (this.bola.x < 0) {
             this.rightScore++;
-            this.ball.reset();
-        } else if (this.ball.x > this.canvas.width) {
+            this.bola.reset();
+        } else if (this.bola.x > this.canvas.width) {
             this.leftScore++;
-            this.ball.reset();
+            this.bola.reset();
         }
     }
 
@@ -90,7 +68,7 @@ class PongGame {
 
         this.leftPaddle.render(this.ctx);
         this.rightPaddle.render(this.ctx);
-        this.ball.render(this.ctx);
+        this.bola.render(this.ctx);
 
         this.renderScore();
         this.renderCenterLine();

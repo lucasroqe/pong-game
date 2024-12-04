@@ -12,8 +12,8 @@ const PORT = 3000;
 app.use(express.static(path.join(__dirname, '../public')));
 
 interface GameState {
-  paddle1Y: number;
-  paddle2Y: number;
+  raquete1Y: number;
+  raquete2Y: number;
   ballX: number;
   ballY: number;
   score1: number;
@@ -21,8 +21,8 @@ interface GameState {
 }
 
 let gameState: GameState = {
-  paddle1Y: 250,
-  paddle2Y: 250,
+  raquete1Y: 250,
+  raquete2Y: 250,
   ballX: 400,
   ballY: 300,
   score1: 0,
@@ -32,46 +32,53 @@ let gameState: GameState = {
 let ballSpeedX = 5;
 let ballSpeedY = 5;
 
+
+//Conexão para multiplayer
 io.on('connection', (socket) => {
   console.log('Jogador conectado:', socket.id);
   
-  const playerNumber = io.engine.clientsCount <= 1 ? 1 : 2;
-  socket.emit('player-number', playerNumber);
+  const numJogador = io.engine.clientsCount <= 1 ? 1 : 2;
+  socket.emit('numJogador', numJogador);
 
-  socket.on('paddle-move', (paddleY: number) => {
-    if (playerNumber === 1) {
-      gameState.paddle1Y = paddleY;
+  socket.on('raquete-move', (raqueteY: number) => {
+    if (numJogador === 1) {
+      gameState.raquete1Y = raqueteY;
     } else {
-      gameState.paddle2Y = paddleY;
+      gameState.raquete2Y = raqueteY;
     }
     io.emit('game-state', gameState);
   });
 
-  socket.on('disconnect', () => {
-    console.log('Player disconnected:', socket.id);
+  socket.on('desconectado', () => {
+    console.log('Jogador desconectado:', socket.id);
   });
 });
 
 setInterval(() => {
+  //Atualizar posição da bola
   gameState.ballX += ballSpeedX;
   gameState.ballY += ballSpeedY;
 
+  //Verificar colisão com as paredes
   if (gameState.ballY <= 0 || gameState.ballY >= 600) {
     ballSpeedY = -ballSpeedY;
   }
 
+  //Verificar colisão com as raquetes
   if (gameState.ballX <= 50 && 
-      gameState.ballY >= gameState.paddle1Y && 
-      gameState.ballY <= gameState.paddle1Y + 100) {
+      gameState.ballY >= gameState.raquete1Y && 
+      gameState.ballY <= gameState.raquete1Y + 100) {
     ballSpeedX = -ballSpeedX;
   }
 
+  //Verificar colisão com a raquete do jogador 2
   if (gameState.ballX >= 750 && 
-      gameState.ballY >= gameState.paddle2Y && 
-      gameState.ballY <= gameState.paddle2Y + 100) {
+      gameState.ballY >= gameState.raquete2Y && 
+      gameState.ballY <= gameState.raquete2Y + 100) {
     ballSpeedX = -ballSpeedX;
   }
 
+  //Verificar se a bola saiu da tela
   if (gameState.ballX <= 0) {
     gameState.score2++;
     gameState.ballX = 400;

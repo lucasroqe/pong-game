@@ -1,6 +1,6 @@
-import { Paddle } from './paddle.js';
+import { Raquete } from './raquete.js'
 
-export class Ball {
+export class Bola {
     private speedX: number = 5;
     private speedY: number = 5;
 
@@ -19,7 +19,7 @@ export class Ball {
             this.speedY = -this.speedY;
         }
     }
-
+    
     render(ctx: CanvasRenderingContext2D) {
         ctx.fillStyle = 'white';
         ctx.beginPath();
@@ -27,12 +27,13 @@ export class Ball {
         ctx.fill();
     }
 
-    checkPaddleCollision(paddle: Paddle): boolean {
+    //Verificar física do jogo
+    colisaoRaquete(raquete: Raquete): boolean {
         return (
-            this.x - this.radius < paddle.x + paddle.width &&
-            this.x + this.radius > paddle.x &&
-            this.y > paddle.y &&
-            this.y < paddle.y + paddle.height
+            this.x - this.radius < raquete.x + raquete.width &&
+            this.x + this.radius > raquete.x &&
+            this.y > raquete.y &&
+            this.y < raquete.y + raquete.height
         );
     }
 

@@ -1,4 +1,4 @@
-export class Paddle {
+export class Raquete {
     private speed: number = 0;
     private readonly moveSpeed: number = 5;
 

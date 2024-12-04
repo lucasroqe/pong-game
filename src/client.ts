@@ -5,22 +5,23 @@ const socket = io();
 const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
 
-let playerNumber = 0;
-let paddle1Y = 250;
-let paddle2Y = 250;
+let numJogador = 0;
+let raquete1Y = 250;
+let raquete2Y = 250;
 let ballX = 400;
 let ballY = 300;
 let score1 = 0;
 let score2 = 0;
 
-socket.on('player-number', (number: number) => {
-  playerNumber = number;
-  console.log(`You are player ${playerNumber}`);
+socket.on('numJogador', (number: number) => {
+  numJogador = number;
+  console.log(`Você é o jogador ${numJogador}`);
 });
 
+//Utilizado para atualizações em tempo real
 socket.on('game-state', (gameState: any) => {
-  paddle1Y = gameState.paddle1Y;
-  paddle2Y = gameState.paddle2Y;
+  raquete1Y = gameState.raquete1Y;
+  raquete2Y = gameState.raquete2Y;
   ballX = gameState.ballX;
   ballY = gameState.ballY;
   score1 = gameState.score1;
@@ -31,10 +32,10 @@ function handleMouseMove(e: MouseEvent) {
   const rect = canvas.getBoundingClientRect();
   const mouseY = e.clientY - rect.top;
   
-  if (playerNumber === 1) {
-    socket.emit('paddle-move', mouseY);
-  } else if (playerNumber === 2) {
-    socket.emit('paddle-move', mouseY);
+  if (numJogador === 1) {
+    socket.emit('raquete-move', mouseY);
+  } else if (numJogador === 2) {
+    socket.emit('raquete-move', mouseY);
   }
 }
 
@@ -45,8 +46,8 @@ function draw() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = 'white';
-  ctx.fillRect(20, paddle1Y, 20, 100);  
-  ctx.fillRect(760, paddle2Y, 20, 100); 
+  ctx.fillRect(20, raquete1Y, 20, 100);  
+  ctx.fillRect(760, raquete2Y, 20, 100); 
 
   ctx.beginPath();
   ctx.arc(ballX, ballY, 10, 0, Math.PI * 2);
